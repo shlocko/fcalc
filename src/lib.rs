@@ -2,6 +2,7 @@
 
 extern crate alloc;
 
+pub mod expression;
 pub mod scanner;
 pub mod token;
 
@@ -34,7 +35,7 @@ mod tests {
     }
 
     #[test]
-    fn test_parse() {
+    fn test_parse_number() {
         let test_str = "123";
         assert_eq!(vec![Token::Number("123".to_string()),], parse(test_str));
     }
@@ -42,6 +43,7 @@ mod tests {
     #[test]
     fn test_digit() {
         let test_char: char = '1';
-        assert_eq!(is_digit(test_char), true);
+        //assert!(is_digit(test_char));
+        assert!(is_digit(test_char));
     }
 }

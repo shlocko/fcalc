@@ -57,7 +57,7 @@ pub fn scan(src: String) -> Vec<Token> {
                 if is_digit(cur_char) {
                     tokens.push(number(cur_char, &mut current, &chars, length));
                 } else {
-                    tokens.push(Token::Plus);
+                    panic!("Invalid character encountered.");
                 }
             }
         }
