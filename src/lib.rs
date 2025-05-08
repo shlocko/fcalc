@@ -44,12 +44,4 @@ mod tests {
         let test_char: char = '1';
         assert_eq!(is_digit(test_char), true);
     }
-
-    #[test]
-    fn check() {
-        assert_eq!(
-            "1".to_string(),
-            "123".to_string().chars().nth(0).unwrap().to_string()
-        );
-    }
 }
