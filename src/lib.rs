@@ -36,7 +36,7 @@ mod tests {
 
     #[test]
     fn test_parse_number() {
-        let test_str = "123";
+        let test_str = "123/7+8";
         assert_eq!(vec![Token::Number("123".to_string()),], parse(test_str));
     }
 
