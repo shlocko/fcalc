@@ -3,7 +3,6 @@
 extern crate alloc;
 
 pub mod expression;
-pub mod operator;
 pub mod parser;
 pub mod scanner;
 pub mod token;
@@ -26,6 +25,7 @@ pub fn parse(src: &str) -> Vec<Token> {
 
 #[cfg(test)]
 mod tests {
+    use expression::{BinaryExpression, Expression, LiteralExpression};
     use scanner::number;
 
     use super::*;
@@ -47,5 +47,20 @@ mod tests {
         let test_char: char = '1';
         //assert!(is_digit(test_char));
         assert!(is_digit(test_char));
+    }
+
+    #[test]
+    fn test_expr_to_string() {
+        let lit_expr = LiteralExpression {
+            value: "Test".to_string(),
+        };
+        let bin_expr = BinaryExpression {
+            right_expression: &lit_expr,
+            left_expression: &lit_expr,
+            operator: Token::Plus,
+        };
+        let expr_str = bin_expr.to_string();
+        println!("{}", expr_str);
+        assert_eq!(expr_str, "");
     }
 }
