@@ -3,6 +3,8 @@
 extern crate alloc;
 
 pub mod expression;
+pub mod operator;
+pub mod parser;
 pub mod scanner;
 pub mod token;
 
