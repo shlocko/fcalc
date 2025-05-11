@@ -2,8 +2,8 @@ use alloc::string::String;
 
 use crate::operator::Operator;
 
-trait Expression {
-    fn to_string() -> String;
+pub trait Expression {
+    fn to_string(&self) -> String;
 }
 
 pub struct LiteralExpression {
