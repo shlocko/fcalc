@@ -1,7 +1,7 @@
-use alloc::string::String;
-
 use crate::token::Token;
+use alloc::boxed::Box;
 use alloc::format;
+use alloc::string::String;
 
 pub trait Expression {
     fn to_string(&self) -> String;
@@ -17,16 +17,17 @@ impl Expression for LiteralExpression {
     }
 }
 
-pub struct BinaryExpression<'a> {
-    pub right_expression: &'a dyn Expression,
-    pub left_expression: &'a dyn Expression,
+pub struct BinaryExpression {
+    pub right_expression: Box<dyn Expression>,
+    pub left_expression: Box<dyn Expression>,
     pub operator: Token,
 }
 
-impl Expression for BinaryExpression<'_> {
+impl Expression for BinaryExpression {
     fn to_string(&self) -> String {
-        let left = self.right_expression.to_string();
-        let right = self.left_expression.to_string();
-        format!("{left}  {right}")
+        let left = self.left_expression.to_string();
+        let right = self.right_expression.to_string();
+        let op = &self.operator;
+        format!("{left} {:?} {right}", op)
     }
 }
