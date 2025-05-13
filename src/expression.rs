@@ -5,6 +5,7 @@ use alloc::string::String;
 
 pub trait Expression {
     fn to_string(&self) -> String;
+    fn simplify(&self) -> Expression;
 }
 
 pub struct LiteralExpression {
@@ -14,6 +15,9 @@ pub struct LiteralExpression {
 impl Expression for LiteralExpression {
     fn to_string(&self) -> String {
         self.value.clone()
+    }
+    fn simplify(&self) -> Expression {
+        self
     }
 }
 
@@ -29,5 +33,8 @@ impl Expression for BinaryExpression {
         let right = self.right_expression.to_string();
         let op = &self.operator;
         format!("{left} {:?} {right}", op)
+    }
+    fn simplify(&self) -> Expression {
+        self
     }
 }

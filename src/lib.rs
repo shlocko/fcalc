@@ -5,6 +5,7 @@ extern crate alloc;
 pub mod expression;
 pub mod parser;
 pub mod scanner;
+pub mod simplify;
 pub mod token;
 
 use expression::Expression;
@@ -72,12 +73,12 @@ mod tests {
         let llit_expr = LiteralExpression {
             value: "Test".to_string(),
         };
-        let bin_expr = BinaryExpression {
+        let _bin_expr = BinaryExpression {
             right_expression: Box::new(rlit_expr),
             left_expression: Box::new(llit_expr),
             operator: Token::Plus,
         };
-        let expr = run("1+2");
+        let expr = run("1/2");
         let expr_str = expr.to_string();
         println!("{}", expr_str);
         assert_eq!(expr_str, "1 Plus 2");
