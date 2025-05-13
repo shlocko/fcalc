@@ -2,10 +2,8 @@ use alloc::boxed::Box;
 use alloc::vec;
 use core::panic;
 
-use crate::{
-    expression::{BinaryExpression, Expression, LiteralExpression},
-    Token,
-};
+use crate::expression::Expression;
+use crate::Token;
 use alloc::vec::Vec;
 
 fn is_at_end(length: usize, current: usize) -> bool {
@@ -40,7 +38,7 @@ fn match_next_token(
     matched
 }
 
-fn term(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Box<dyn Expression> {
+fn term(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
     let left = primary(tokens, current, length);
     if match_next_token(
         tokens,
@@ -50,25 +48,25 @@ fn term(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Box<dyn Expr
     ) {
         let op = previous(tokens, current);
         let right = primary(tokens, current, length);
-        return Box::new(BinaryExpression {
-            left_expression: left,
+        return Expression::Binary {
+            left: Box::new(left),
             operator: op,
-            right_expression: right,
-        });
+            right: Box::new(right),
+        };
     }
 
     left
 }
 
-fn primary(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Box<dyn Expression> {
+fn primary(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
     let token = consume_token(tokens, current);
     match token {
-        Token::Number(i) => Box::new(LiteralExpression { value: i }),
+        Token::Number(i) => Expression::Literal(i),
         _ => panic!("Invalid token"),
     }
 }
 
-pub fn parse(tokens: Vec<Token>) -> Box<dyn Expression> {
+pub fn parse(tokens: Vec<Token>) -> Expression {
     let length: usize = tokens.len();
     let mut current: usize = 0;
 

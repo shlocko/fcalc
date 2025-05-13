@@ -23,14 +23,14 @@ pub fn add(left: u64, right: u64) -> u64 {
     left + right
 }
 
-pub fn run(src: &str) -> Box<dyn Expression> {
+pub fn run(src: &str) -> Expression {
     let tokens = scan(src.to_string());
     parse(tokens)
 }
 
 #[cfg(test)]
 mod tests {
-    use expression::{BinaryExpression, Expression, LiteralExpression};
+    use expression::Expression;
     use parser::parse;
     use scanner::number;
 
@@ -66,21 +66,17 @@ mod tests {
 
     #[test]
     fn test_expr_to_string() {
-        let rlit_expr = LiteralExpression {
-            value: "Test".to_string(),
-        };
+        let rlit_expr = Expression::Literal("Test".to_string());
+        let llit_expr = Expression::Literal("Test".to_string());
 
-        let llit_expr = LiteralExpression {
-            value: "Test".to_string(),
-        };
-        let _bin_expr = BinaryExpression {
-            right_expression: Box::new(rlit_expr),
-            left_expression: Box::new(llit_expr),
+        let _bin_expr = Expression::Binary {
+            right: Box::new(rlit_expr),
+            left: Box::new(llit_expr),
             operator: Token::Plus,
         };
-        let expr = run("1/2");
+        let expr = run("1+2");
         let expr_str = expr.to_string();
         println!("{}", expr_str);
-        assert_eq!(expr_str, "1 Plus 2");
+        assert_eq!(expr_str, "(Plus 1 2)");
     }
 }

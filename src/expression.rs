@@ -1,9 +1,9 @@
 use crate::token::Token;
 use alloc::boxed::Box;
 use alloc::format;
-use alloc::string::String;
+use alloc::string::{String, ToString};
 
-pub trait Expression {
+/*pub trait Expression {
     fn to_string(&self) -> String;
     fn simplify(&self) -> Expression;
 }
@@ -36,5 +36,30 @@ impl Expression for BinaryExpression {
     }
     fn simplify(&self) -> Expression {
         self
+    }
+}*/
+pub enum Expression {
+    Literal(String),
+    Binary {
+        left: Box<Expression>,
+        right: Box<Expression>,
+        operator: Token,
+    },
+}
+
+impl Expression {
+    pub fn to_string(&self) -> String {
+        match self {
+            Self::Literal(i) => i.to_string(),
+            Self::Binary {
+                left,
+                right,
+                operator,
+            } => {
+                let left = left.to_string();
+                let right = right.to_string();
+                format!("({:?} {left} {right})", operator)
+            }
+        }
     }
 }
