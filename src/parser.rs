@@ -34,20 +34,18 @@ fn match_next_token(
                 matched = true;
             }
         }
+        if !matched {
+            *current = *current - 1
+        }
     }
     matched
 }
 
 fn term(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
-    let left = primary(tokens, current, length);
-    if match_next_token(
-        tokens,
-        current,
-        vec![Token::Plus, Token::Minus, Token::Slash, Token::Star],
-        length,
-    ) {
+    let left = factor(tokens, current, length);
+    if match_next_token(tokens, current, vec![Token::Plus, Token::Minus], length) {
         let op = previous(tokens, current);
-        let right = primary(tokens, current, length);
+        let right = factor(tokens, current, length);
         return Expression::Binary {
             left: Box::new(left),
             operator: op,
@@ -56,6 +54,38 @@ fn term(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
     }
 
     left
+}
+
+fn factor(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
+    let left = unary(tokens, current, length);
+    if match_next_token(
+        tokens,
+        current,
+        vec![Token::Star, Token::Slash, Token::SlashSlash],
+        length,
+    ) {
+        let op = previous(tokens, current);
+        let right = unary(tokens, current, length);
+        return Expression::Binary {
+            left: Box::new(left),
+            operator: op,
+            right: Box::new(right),
+        };
+    }
+
+    left
+}
+
+fn unary(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
+    if match_next_token(tokens, current, vec![Token::Minus], length) {
+        let op = previous(tokens, current);
+        let right = unary(tokens, current, length);
+        return Expression::Unary {
+            operator: op,
+            right: Box::new(right),
+        };
+    }
+    return primary(tokens, current, length);
 }
 
 fn primary(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {

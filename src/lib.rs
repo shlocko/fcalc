@@ -66,17 +66,17 @@ mod tests {
 
     #[test]
     fn test_expr_to_string() {
-        let rlit_expr = Expression::Literal("Test".to_string());
-        let llit_expr = Expression::Literal("Test".to_string());
-
-        let _bin_expr = Expression::Binary {
-            right: Box::new(rlit_expr),
-            left: Box::new(llit_expr),
-            operator: Token::Plus,
-        };
-        let expr = run("1+2");
+        let expr = run("1*2+1");
         let expr_str = expr.to_string();
         println!("{}", expr_str);
-        assert_eq!(expr_str, "(Plus 1 2)");
+        assert_eq!(expr_str, "(Plus (Star 1 2) 1)");
+    }
+
+    #[test]
+    fn test_unary() {
+        let expr = run("1*-2");
+        let expr_str = expr.to_string();
+        println!("{}", expr_str);
+        assert_eq!(expr_str, "(Star 1 (Minus 2))");
     }
 }

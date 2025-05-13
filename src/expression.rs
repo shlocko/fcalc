@@ -45,6 +45,10 @@ pub enum Expression {
         right: Box<Expression>,
         operator: Token,
     },
+    Unary {
+        operator: Token,
+        right: Box<Expression>,
+    },
 }
 
 impl Expression {
@@ -59,6 +63,10 @@ impl Expression {
                 let left = left.to_string();
                 let right = right.to_string();
                 format!("({:?} {left} {right})", operator)
+            }
+            Self::Unary { operator, right } => {
+                let right = right.to_string();
+                format!("({:?} {right})", operator)
             }
         }
     }
