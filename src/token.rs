@@ -12,6 +12,7 @@ pub enum Token {
     SlashSlash,
     LParen,
     RParen,
+    Bang,
 }
 
 #[derive(Debug, Clone, PartialEq)]

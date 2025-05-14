@@ -74,7 +74,7 @@ mod tests {
 
     #[test]
     fn test_unary() {
-        let expr = run("1*-2");
+        let expr = run("!1*-2");
         let expr_str = expr.to_string();
         println!("{}", expr_str);
         assert_eq!(expr_str, "(Star 1 (Minus 2))");

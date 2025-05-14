@@ -73,6 +73,7 @@ pub fn scan(src: String) -> Vec<Token> {
             '*' => tokens.push(Token::Star),
             '-' => tokens.push(Token::Minus),
             '+' => tokens.push(Token::Plus),
+            '!' => tokens.push(Token::Bang),
             _ => {
                 if is_digit(cur_char) {
                     tokens.push(number(cur_char, &mut current, &chars, length));

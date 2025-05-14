@@ -77,7 +77,7 @@ fn factor(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression
 }
 
 fn unary(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
-    if match_next_token(tokens, current, vec![Token::Minus], length) {
+    if match_next_token(tokens, current, vec![Token::Minus, Token::Bang], length) {
         let op = previous(tokens, current);
         let right = unary(tokens, current, length);
         return Expression::Unary {
