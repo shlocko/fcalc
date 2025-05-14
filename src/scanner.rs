@@ -1,4 +1,6 @@
-use crate::token::Token;
+use core::panic;
+
+use crate::token::{Number, Token};
 use alloc::string::{String, ToString};
 use alloc::vec;
 use alloc::vec::Vec;
@@ -21,14 +23,32 @@ pub fn is_digit(cur_char: char) -> bool {
     cur_char.is_digit(10)
 }
 
+pub fn to_number(str_num: String) -> Number {
+    let num = match str_num.parse::<i32>() {
+        Ok(num) => Number::Integer(num),
+        Err(e) => match str_num.parse::<f32>() {
+            Ok(num) => Number::Float(num),
+            _ => panic!("Not number when scanning number"),
+        },
+    };
+    num
+}
+
 pub fn number(cur_char: char, current: &mut usize, chars: &Vec<char>, length: usize) -> Token {
     let mut st: String = "".to_string();
     st.push_str(cur_char.to_string().as_str());
     while !is_at_end(length, *current) && is_digit(peek(chars, current)) {
-        let ch = consume_char(chars, current);
-        st.push_str(ch.to_string().as_str());
+        if peek(chars, current) != '.' {
+            let ch = consume_char(chars, current);
+            st.push_str(ch.to_string().as_str());
+        } else {
+            while !is_at_end(length, *current) && is_digit(peek(chars, current)) {
+                let ch = consume_char(chars, current);
+                st.push_str(ch.to_string().as_str());
+            }
+        }
     }
-    Token::Number(st)
+    Token::Number(to_number(st))
 }
 
 pub fn scan(src: String) -> Vec<Token> {

@@ -4,7 +4,7 @@ use core::write;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
-    Number(String),
+    Number(Number),
     Plus,
     Minus,
     Star,
@@ -12,4 +12,11 @@ pub enum Token {
     SlashSlash,
     LParen,
     RParen,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Number {
+    Integer(i32),
+    Rational(i32, i32),
+    Float(f32),
 }

@@ -1,4 +1,4 @@
-use crate::token::Token;
+use crate::token::{Number, Token};
 use alloc::boxed::Box;
 use alloc::format;
 use alloc::string::{String, ToString};
@@ -39,7 +39,7 @@ impl Expression for BinaryExpression {
     }
 }*/
 pub enum Expression {
-    Literal(String),
+    Literal(Number),
     Binary {
         left: Box<Expression>,
         right: Box<Expression>,
@@ -54,7 +54,11 @@ pub enum Expression {
 impl Expression {
     pub fn to_string(&self) -> String {
         match self {
-            Self::Literal(i) => i.to_string(),
+            Self::Literal(i) => match i {
+                Number::Integer(i) => i.to_string(),
+                Number::Float(i) => i.to_string(),
+                Number::Rational(n, d) => format!("{n}/{d}"),
+            },
             Self::Binary {
                 left,
                 right,

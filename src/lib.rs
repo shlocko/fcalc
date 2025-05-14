@@ -12,7 +12,7 @@ use expression::Expression;
 pub use parser::parse;
 pub use scanner::is_digit;
 pub use scanner::scan;
-pub use token::Token;
+pub use token::{Number, Token};
 
 use alloc::boxed::Box;
 use alloc::string::String;
@@ -47,11 +47,11 @@ mod tests {
         let test_str = "123/7+8";
         assert_eq!(
             vec![
-                Token::Number("123".to_string()),
+                Token::Number(Number::Integer(123)),
                 Token::Slash,
-                Token::Number("7".to_string()),
+                Token::Number(Number::Integer(7)),
                 Token::Plus,
-                Token::Number("8".to_string())
+                Token::Number(Number::Integer(8))
             ],
             scan(test_str.to_string())
         );
@@ -66,7 +66,7 @@ mod tests {
 
     #[test]
     fn test_expr_to_string() {
-        let expr = run("1*2+1");
+        let expr = run("1*3+1");
         let expr_str = expr.to_string();
         println!("{}", expr_str);
         assert_eq!(expr_str, "(Plus (Star 1 2) 1)");
