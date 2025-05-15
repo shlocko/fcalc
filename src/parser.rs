@@ -61,7 +61,7 @@ fn factor(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression
     if match_next_token(
         tokens,
         current,
-        vec![Token::Star, Token::Slash, Token::SlashSlash],
+        vec![Token::Star, Token::SlashSlash],
         length,
     ) {
         let op = previous(tokens, current);
@@ -73,6 +73,18 @@ fn factor(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression
         };
     }
 
+    left
+}
+
+fn rational(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
+    let left = term(tokens, current, length);
+    if match_next_token(tokens, current, vec![Token::Slash], length) {
+        let right = term(tokens, current, length);
+        return Expression::Rational {
+            left: Box::new(left),
+            right: Box::new(right),
+        };
+    }
     left
 }
 
@@ -101,7 +113,7 @@ pub fn parse(tokens: Vec<Token>) -> Expression {
     let mut current: usize = 0;
 
     if !is_at_end(length, current) {
-        term(&tokens, &mut current, length)
+        rational(&tokens, &mut current, length)
     } else {
         panic!("NO TOKENS(parse)");
     }

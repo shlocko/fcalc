@@ -66,7 +66,7 @@ mod tests {
 
     #[test]
     fn test_expr_to_string() {
-        let expr = run("1*3+1");
+        let expr = run("1*2+1");
         let expr_str = expr.to_string();
         println!("{}", expr_str);
         assert_eq!(expr_str, "(Plus (Star 1 2) 1)");
@@ -74,9 +74,17 @@ mod tests {
 
     #[test]
     fn test_unary() {
-        let expr = run("!1*-2");
+        let expr = run("-1*-2");
         let expr_str = expr.to_string();
         println!("{}", expr_str);
-        assert_eq!(expr_str, "(Star 1 (Minus 2))");
+        assert_eq!(expr_str, "(Star (Minus 1) (Minus 2))");
+    }
+
+    #[test]
+    fn test_rational() {
+        let expr = run("2+1/4");
+        let expr_str = expr.to_string();
+        println!("{expr_str}");
+        assert_eq!(expr_str, "(Rational (Plus 2 1)/4)")
     }
 }
