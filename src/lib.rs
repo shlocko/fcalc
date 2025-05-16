@@ -85,6 +85,12 @@ mod tests {
         let expr = run("2+1/4");
         let expr_str = expr.to_string();
         println!("{expr_str}");
-        assert_eq!(expr_str, "(Rational (Plus 2 1)/4)")
+        assert_eq!(expr_str, "(Plus 2 (Rational 1/4))")
+    }
+
+    #[test]
+    fn test_reduce() {
+        let expr = run("(8/12)/3");
+        let expr_str = expr.to_string();
     }
 }

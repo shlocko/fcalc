@@ -26,7 +26,6 @@ impl Expression {
             Self::Literal(i) => match i {
                 Number::Integer(i) => i.to_string(),
                 Number::Float(i) => i.to_string(),
-                Number::Rational(n, d) => format!("{n}/{d}"),
             },
             Self::Binary {
                 left,

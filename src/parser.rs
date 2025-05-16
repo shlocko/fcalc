@@ -57,7 +57,7 @@ fn term(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
 }
 
 fn factor(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
-    let left = unary(tokens, current, length);
+    let left = rational(tokens, current, length);
     if match_next_token(
         tokens,
         current,
@@ -65,7 +65,7 @@ fn factor(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression
         length,
     ) {
         let op = previous(tokens, current);
-        let right = unary(tokens, current, length);
+        let right = rational(tokens, current, length);
         return Expression::Binary {
             left: Box::new(left),
             operator: op,
@@ -77,9 +77,9 @@ fn factor(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression
 }
 
 fn rational(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
-    let left = term(tokens, current, length);
+    let left = unary(tokens, current, length);
     if match_next_token(tokens, current, vec![Token::Slash], length) {
-        let right = term(tokens, current, length);
+        let right = unary(tokens, current, length);
         return Expression::Rational {
             left: Box::new(left),
             right: Box::new(right),
@@ -113,7 +113,7 @@ pub fn parse(tokens: Vec<Token>) -> Expression {
     let mut current: usize = 0;
 
     if !is_at_end(length, current) {
-        rational(&tokens, &mut current, length)
+        term(&tokens, &mut current, length)
     } else {
         panic!("NO TOKENS(parse)");
     }
