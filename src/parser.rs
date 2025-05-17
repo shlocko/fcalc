@@ -2,7 +2,9 @@ use alloc::boxed::Box;
 use alloc::vec;
 use core::panic;
 
+use crate::expression;
 use crate::expression::Expression;
+use crate::Number;
 use crate::Token;
 use alloc::vec::Vec;
 
@@ -41,16 +43,27 @@ fn match_next_token(
     matched
 }
 
+fn expression(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
+    term(tokens, current, length)
+}
+
 fn term(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
     let left = factor(tokens, current, length);
     if match_next_token(tokens, current, vec![Token::Plus, Token::Minus], length) {
         let op = previous(tokens, current);
         let right = factor(tokens, current, length);
-        return Expression::Binary {
-            left: Box::new(left),
-            operator: op,
-            right: Box::new(right),
+        let expr = match op {
+            Token::Plus => Expression::Add {
+                left: Box::new(left),
+                right: Box::new(right),
+            },
+            Token::Minus => Expression::Subtract {
+                left: Box::new(left),
+                right: Box::new(right),
+            },
+            _ => panic!("Invalid operator for factor."),
         };
+        return expr;
     }
 
     left
@@ -66,11 +79,18 @@ fn factor(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression
     ) {
         let op = previous(tokens, current);
         let right = rational(tokens, current, length);
-        return Expression::Binary {
-            left: Box::new(left),
-            operator: op,
-            right: Box::new(right),
+        let expr = match op {
+            Token::Star => Expression::Multiply {
+                left: Box::new(left),
+                right: Box::new(right),
+            },
+            Token::SlashSlash => Expression::Divide {
+                left: Box::new(left),
+                right: Box::new(right),
+            },
+            _ => panic!("Invalid operator for factor."),
         };
+        return expr;
     }
 
     left
@@ -103,8 +123,22 @@ fn unary(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression 
 fn primary(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expression {
     let token = consume_token(tokens, current);
     match token {
-        Token::Number(i) => Expression::Literal(i),
-        _ => panic!("Invalid token"),
+        Token::Number(i) => match i {
+            Number::Float(i) => Expression::Float(i),
+            Number::Integer(i) => Expression::Number(i),
+        },
+        Token::LParen => {
+            let expr = expression(tokens, current, length);
+            let grp_expr = Expression::Grouping {
+                expr: Box::new(expr),
+            };
+            if match_next_token(tokens, current, vec![Token::RParen], length) {
+                return grp_expr;
+            } else {
+                panic!("Expected ')' after grouping.");
+            }
+        }
+        _ => panic!("Invalid token {:?}", token),
     }
 }
 
@@ -113,7 +147,7 @@ pub fn parse(tokens: Vec<Token>) -> Expression {
     let mut current: usize = 0;
 
     if !is_at_end(length, current) {
-        term(&tokens, &mut current, length)
+        expression(&tokens, &mut current, length)
     } else {
         panic!("NO TOKENS(parse)");
     }

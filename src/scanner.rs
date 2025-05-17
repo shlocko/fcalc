@@ -60,8 +60,8 @@ pub fn scan(src: String) -> Vec<Token> {
     while !is_at_end(length, current) {
         let cur_char: char = consume_char(&chars, &mut current);
         match cur_char {
-            '(' => tokens.push(Token::RParen),
-            ')' => tokens.push(Token::LParen),
+            '(' => tokens.push(Token::LParen),
+            ')' => tokens.push(Token::RParen),
             '/' => {
                 if peek(&chars, &current) == '/' {
                     tokens.push(Token::SlashSlash);
