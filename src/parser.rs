@@ -125,7 +125,7 @@ fn primary(tokens: &Vec<Token>, current: &mut usize, length: usize) -> Expressio
     match token {
         Token::Number(i) => match i {
             Number::Float(i) => Expression::Float(i),
-            Number::Integer(i) => Expression::Number(i),
+            Number::Integer(i) => Expression::Number(i, 1),
         },
         Token::LParen => {
             let expr = expression(tokens, current, length);

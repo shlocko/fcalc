@@ -4,7 +4,7 @@ use alloc::format;
 use alloc::string::{String, ToString};
 
 pub enum Expression {
-    Number(i32),
+    Number(i32, i32),
     Float(f32),
     Add {
         left: Box<Expression>,
@@ -38,7 +38,7 @@ pub enum Expression {
 impl Expression {
     pub fn to_string(&self) -> String {
         match self {
-            Self::Number(i) => i.to_string(),
+            Self::Number(a, b) => format!("{}/{}", a.to_string(), b.to_string()),
             Self::Float(i) => i.to_string(),
             Self::Add { left, right } => {
                 let left = left.to_string();
