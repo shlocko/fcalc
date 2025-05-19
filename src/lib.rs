@@ -12,6 +12,7 @@ use expression::Expression;
 pub use parser::parse;
 pub use scanner::is_digit;
 pub use scanner::scan;
+pub use simplify::simplify_expr;
 pub use token::{Number, Token};
 
 use alloc::boxed::Box;
@@ -93,5 +94,11 @@ mod tests {
         let expr = run("(8/12)/3");
         //let expr_str = expr.to_string();
         assert!(true);
+    }
+
+    #[test]
+    fn test_add_number() {
+        let expr = run("2+1");
+        assert_eq!(simplify_expr(expr).to_string(), "")
     }
 }
